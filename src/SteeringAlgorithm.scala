@@ -1,0 +1,7 @@
+
+
+object SteeringAlgorithm {
+  def seek = ???
+  def braking = ???
+  def avoid = ???
+}
