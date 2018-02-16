@@ -1,6 +1,8 @@
 import scala.swing._
 
 class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
+  val room = new Room(width, height, humans)
+  
   title = "the Ryysissimulaatio"
   preferredSize = new Dimension(320, 240)
   contents = new BoxPanel(Orientation.Vertical) {
