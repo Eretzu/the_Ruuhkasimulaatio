@@ -1,17 +1,19 @@
 
 
 object SteeringAlgorithm {
-  def getAcceleration ( caller:Human, room:Room ) : Vector = {
-    returnVector += seek
-    returnVector += braking
-    returnVector += avoidWall
-    returnVector += avoidCollision
+  def getAcceleration ( caller:Human, room:Room ) : (Int, Int) = {
+    var returnVector = ( 0, 0 )
+    returnVector = addVectors( returnVector, seek )
+    returnVector = addVectors( returnVector, brake )
+    returnVector = addVectors( returnVector, avoid )
     return returnVector
   }
   
-  def seek () : Vector = ???
+  private def seek () : (Int, Int) = ???
   
-  def braking () : Vector = ???
+  private def brake () : (Int, Int) = ???
   
-  def avoid () : Vector = ???
+  private def avoid () : (Int, Int) = ???
+  
+  private def addVectors ( one:(Int, Int), two:(Int, Int) ) : (Int, Int) = ( one._1 + two._1, one._2 + two._2)
 }
