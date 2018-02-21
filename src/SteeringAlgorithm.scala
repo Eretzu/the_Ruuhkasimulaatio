@@ -1,19 +1,19 @@
 
 
 object SteeringAlgorithm {
-  def getAcceleration ( x: Int, y: Int, room:Room ) : (Int, Int) = {
-    var returnVector = ( 0, 0 )
+  def getAcceleration ( x: Float, y: Float, room:Room ) : (Float, Float) = {
+    var returnVector = ( 0f, 0f )
     returnVector = addVectors( returnVector, seek )
     returnVector = addVectors( returnVector, brake )
     returnVector = addVectors( returnVector, avoid )
     return returnVector
   }
   
-  private def seek () : (Int, Int) = ???
+  private def seek () : (Float, Float) = ???
   
-  private def brake () : (Int, Int) = ???
+  private def brake () : (Float, Float) = ???
   
-  private def avoid () : (Int, Int) = ???
+  private def avoid () : (Float, Float) = ???
   
-  private def addVectors ( one:(Int, Int), two:(Int, Int) ) : (Int, Int) = ( one._1 + two._1, one._2 + two._2)
+  private def addVectors ( one:(Float, Float), two:(Float, Float) ) : (Float, Float) = ( one._1 + two._1, one._2 + two._2)
 }
