@@ -1,4 +1,7 @@
+import ryysissimulaatio.Room
 
+
+package ryysissimulaatio
 
 object SteeringAlgorithm {
   def getAcceleration ( x: Float, y: Float, room:Room ) : (Float, Float) = {

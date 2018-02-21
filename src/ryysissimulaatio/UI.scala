@@ -1,3 +1,5 @@
+package ryysissimulaatio
+
 import java.awt.{Graphics2D,Color,BasicStroke}
 import java.awt.geom._
 import scala.swing._
@@ -16,6 +18,11 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
     contents += new Label(height.toString)
     contents += new Label(humans.toString)*/
     contents += canvas
+  }
+  
+  def tick() = {
+    room.humans.foreach( ??? )
+    canvas.repaint()
   }
 }
 
@@ -44,6 +51,10 @@ object TheRuuhkasimulaatio {
     val vals = setup()
     val ui = new UI(vals._1, vals._2, vals._3)
     ui.visible = true
+    
+    val timer = new javax.swing.Timer(6, ui.tick())
+    timer.start()
+
     println("End of main function")
   }
   
