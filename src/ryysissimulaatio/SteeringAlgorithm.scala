@@ -1,6 +1,3 @@
-import ryysissimulaatio.Room
-
-
 package ryysissimulaatio
 
 object SteeringAlgorithm {

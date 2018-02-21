@@ -2,7 +2,6 @@ package ryysissimulaatio
 
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
-import ryysissimulaatio.SteeringAlgorithm
 
 class Room(val width: Int, val height: Int, humanAmount: Int) {
   val rand = new Random

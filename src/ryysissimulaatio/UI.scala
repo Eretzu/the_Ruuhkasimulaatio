@@ -1,6 +1,7 @@
 package ryysissimulaatio
 
 import java.awt.{Graphics2D,Color,BasicStroke}
+import java.awt.event.ActionListener
 import java.awt.geom._
 import scala.swing._
 
@@ -52,7 +53,13 @@ object TheRuuhkasimulaatio {
     val ui = new UI(vals._1, vals._2, vals._3)
     ui.visible = true
     
-    val timer = new javax.swing.Timer(6, ui.tick())
+    val listener = new ActionListener(){
+      def actionPerformed(e : java.awt.event.ActionEvent) = {
+        ui.tick()
+      }  
+    }
+    
+    val timer = new javax.swing.Timer(6, listener)
     timer.start()
 
     println("End of main function")
