@@ -39,8 +39,8 @@ class Canvas(val room: Room, val Marginal: Int) extends Component {
 	  g.setStroke(new BasicStroke(10))
 	  g.drawRect(Marginal-5,Marginal-5, d.width-(Marginal-5)*2, d.height-(Marginal-5)*2)
 	  for (human <- room.humans) {
-	    val x = human._1+Marginal
-	    val y = human._2+Marginal
+	    val x = human.x+Marginal
+	    val y = human.y+Marginal
 	    g.setColor(Color.blue)
       g.fill(new Ellipse2D.Double(x, y, 15, 15))
     }

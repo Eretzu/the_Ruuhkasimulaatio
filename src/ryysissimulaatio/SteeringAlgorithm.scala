@@ -1,19 +1,17 @@
 package ryysissimulaatio
 
 object SteeringAlgorithm {
-  def getAcceleration ( x: Float, y: Float, room:Room ) : (Float, Float) = {
-    var returnVector = ( 0f, 0f )
-    returnVector = addVectors( returnVector, seek )
-    returnVector = addVectors( returnVector, brake )
-    returnVector = addVectors( returnVector, avoid )
+  def getAcceleration ( human: Human, room:Room ) : Vector2D = {
+    var returnVector = new Vector2D(0,0)
+    returnVector = returnVector + seek
+    returnVector = returnVector + brake
+    returnVector = returnVector + avoid
     return returnVector
   }
   
-  private def seek () : (Float, Float) = ???
+  private def seek () : Vector2D = ???
   
-  private def brake () : (Float, Float) = ???
+  private def brake () : Vector2D = ???
   
-  private def avoid () : (Float, Float) = ???
-  
-  private def addVectors ( one:(Float, Float), two:(Float, Float) ) : (Float, Float) = ( one._1 + two._1, one._2 + two._2)
+  private def avoid () : Vector2D = ???
 }

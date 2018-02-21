@@ -1,5 +1,5 @@
 package ryysissimulaatio
 
-class Human {
+class Human( var x: Float, var y: Float) {
   def move = ???
 }
