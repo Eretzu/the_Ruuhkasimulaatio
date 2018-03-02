@@ -9,7 +9,7 @@ class Human( x: Double, y: Double, val room: Room) {
   private def getAcceleration() = SteeringAlgorithm.getAcceleration(this, room)
   
   def move() = {
-    speed = getAcceleration()
+    speed += getAcceleration()
     position += speed
   }
 }
