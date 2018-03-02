@@ -41,7 +41,7 @@ class Canvas(val room: Room, val Marginal: Int) extends Component {
 	  val leftMiddle = d.height/2
 	  g.setColor(Color.white)
 	  g.fillRect(0,leftMiddle-25,20,50)
-	  for (human <- room.getHumans) {
+	  for (human <- room.humans) {
 	    val x = human.position.x
 	    val y = human.position.y
 	    g.setColor(Color.blue)
