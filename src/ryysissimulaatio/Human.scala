@@ -6,10 +6,11 @@ class Human( x: Double, y: Double, val room: Room) {
   var speed = Vector2D(0,0)
   var heading = 0
   
-  def getAcceleration() = SteeringAlgorithm.getAcceleration(this, room)
+  private def getAcceleration() = SteeringAlgorithm.getAcceleration(this, room)
   
   def move() = {
-    position += Vector2D(1,0)
+    speed = getAcceleration()
+    position += speed
   }
 }
 
