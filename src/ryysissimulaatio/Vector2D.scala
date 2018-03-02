@@ -18,6 +18,8 @@ case class Vector2D(x: Double, y: Double) {
     Vector2D(math.cos(newAngle) * newLen, math.sin(newAngle) * newLen)
   }*/
   
+  def normalize() = Vector2D(x/length, y/length)
+  
   /**
    * Lakee yhteen kaksi vektoria ja palauttaa uuden vektorin
    */
