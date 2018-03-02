@@ -41,11 +41,11 @@ class Canvas(val room: Room, val Marginal: Int) extends Component {
 	  val leftMiddle = d.height/2
 	  g.setColor(Color.white)
 	  g.fillRect(0,leftMiddle-25,20,50)
-	  for (human <- room.humans) {
+	  for (human <- room.getHumans) {
 	    val x = human.position.x
 	    val y = human.position.y
 	    g.setColor(Color.blue)
-      g.fill(new Ellipse2D.Double(x, y, 15, 15))
+      g.fill(new Ellipse2D.Double(x+Marginal-7, y+Marginal-7, 14, 14))
     }
   }
 }

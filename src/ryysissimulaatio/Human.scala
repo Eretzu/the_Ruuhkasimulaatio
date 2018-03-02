@@ -2,19 +2,23 @@ package ryysissimulaatio
 
 class Human( x: Double, y: Double, val room: Room) {
   val mass = 1
-  var position = Vector2D(x, y)
-  var speed = Vector2D(0,0)
-  var heading = 0
+  private var _position = Vector2D(x, y)
+  private var _velocity = Vector2D(0,0)
+  //private var heading = 0
   
-  private def getAcceleration() = SteeringAlgorithm.getAcceleration(this, room)
+  def position = _position
+  def velocity = _velocity
+  
+  private def getAcceleration() = SteeringAlgorithm.getAcceleration(this, room).derive(0, Human.MaxForce)
   
   def move() = {
-    speed += getAcceleration()
-    position += speed
+    _velocity += getAcceleration()
+    _velocity = velocity.truncate(Human.MaxSpeed)
+    _position += velocity
   }
 }
 
 object Human {
   val MaxForce = 1
-  val MaxSpeed = 1
+  val MaxSpeed = 3
 }

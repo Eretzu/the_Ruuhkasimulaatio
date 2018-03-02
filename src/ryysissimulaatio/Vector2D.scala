@@ -11,20 +11,29 @@ case class Vector2D(x: Double, y: Double) {
   /**
    * johtaa vektorista uuden vektorin, jonka suuntaa on poikkeutettu ja pituutta skaalattu
    */
-  /*
+  
   def derive(angleOff: Double, lengthTimes: Double) = {
     val newLen   = length * lengthTimes
     val newAngle = angle + angleOff 
     Vector2D(math.cos(newAngle) * newLen, math.sin(newAngle) * newLen)
-  }*/
+  }
   
-  def normalize() = Vector2D(x/length, y/length)
+  def normalize() = this.truncate(1.0)
+  
+  def truncate(maxLength: Double) = {
+    if(this.length > maxLength) Vector2D(x/length*maxLength, y/length*maxLength)
+    else this
+  }
   
   /**
    * Lakee yhteen kaksi vektoria ja palauttaa uuden vektorin
    */
   def + (other: Vector2D) = {
     Vector2D(x + other.x, y + other.y)    
+  }  
+  
+  def - (other: Vector2D) = {
+    Vector2D(x - other.x, y - other.y)    
   }
 
   /**
