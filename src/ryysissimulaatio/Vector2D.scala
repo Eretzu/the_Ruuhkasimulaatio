@@ -11,11 +11,12 @@ case class Vector2D(x: Double, y: Double) {
   /**
    * johtaa vektorista uuden vektorin, jonka suuntaa on poikkeutettu ja pituutta skaalattu
    */
+  /*
   def derive(angleOff: Double, lengthTimes: Double) = {
     val newLen   = length * lengthTimes
     val newAngle = angle + angleOff 
     Vector2D(math.cos(newAngle) * newLen, math.sin(newAngle) * newLen)
-  }
+  }*/
   
   /**
    * Lakee yhteen kaksi vektoria ja palauttaa uuden vektorin
@@ -29,6 +30,7 @@ case class Vector2D(x: Double, y: Double) {
    * bound saa parametreina ikkunan koon ja kappaleen koon.
    */
   
+  /*
   def bound(xBound: Int, shapeWidth: Int, yBound: Int, shapeHeight: Int) = {
     val newX = 
       if (x >= xBound+shapeWidth) 
@@ -48,5 +50,5 @@ case class Vector2D(x: Double, y: Double) {
       Vector2D(newX, newY)
     else
       this
-  }
+  }*/
 }
