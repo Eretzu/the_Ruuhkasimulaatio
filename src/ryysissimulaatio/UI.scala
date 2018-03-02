@@ -22,7 +22,7 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
   }
   
   def tick() = {
-    room.humans.foreach( _.move() )
+    room.runRound()
     canvas.repaint()
   }
 }
