@@ -11,7 +11,9 @@ class Room(val width: Int, val height: Int, humanAmount: Int) {
   
   def runRound() = _humans.foreach( _.move() )
   
-  def getDoorCoordinates: Vector2D = Vector2D(-30, height/2)
+  def getDoorCoordinates: Vector2D = Vector2D(-10, height/2)
   
   def humans = _humans.toVector
+  
+  //def delete(human: Human) = _humans -= human
 }
