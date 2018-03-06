@@ -10,16 +10,16 @@ class Human( x: Double, y: Double, val room: Room) {
   def position = _position
   def velocity = _velocity
   
-  private def getAcceleration() = steering.getAcceleration().derive(0, Human.MaxForce)
+  private def getAcceleration() = steering.getAcceleration().truncate(Human.MaxForce)
   
   def move() = {
     _velocity += getAcceleration()
     _velocity = velocity.truncate(Human.MaxSpeed)
     _position += velocity
     if(_position.x < 7 && (_position.y < room.door-25 || _position.y > room.door+25)) _position = Vector2D(7, _position.y)
-    else if(_position.x - room.width > 7) _position = Vector2D(room.width, _position.y)
+    else if(room.width - _position.x < 7) _position = Vector2D(room.width-7, _position.y)
     if(_position.y < 7) _position = Vector2D(_position.x, 7)
-    else if(_position.y - room.height > 7) _position = Vector2D(_position.x, room.height-7)
+    else if(room.height - _position.y < 7) _position = Vector2D(_position.x, room.height-7)
   }
 }
 

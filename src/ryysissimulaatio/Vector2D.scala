@@ -8,15 +8,7 @@ case class Vector2D(x: Double, y: Double) {
   val length = math.hypot(x, y)
   val angle  = math.atan2(y, x)
 
-  /**
-   * johtaa vektorista uuden vektorin, jonka suuntaa on poikkeutettu ja pituutta skaalattu
-   */
-  
-  def derive(angleOff: Double, lengthTimes: Double) = {
-    val newLen   = length * lengthTimes
-    val newAngle = angle + angleOff 
-    Vector2D(math.cos(newAngle) * newLen, math.sin(newAngle) * newLen)
-  }
+  def * (scalar: Double) = Vector2D(x*scalar, y*scalar)
   
   def normalize() = this.truncate(1.0)
   
