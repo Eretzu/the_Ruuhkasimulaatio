@@ -4,6 +4,7 @@ class Human( x: Double, y: Double, val room: Room, val mass: Double = 1) {
   private var _position = Vector2D(x, y)
   private var _velocity = Vector2D(0,0)
   private val steering = new SteeringAlgorithm(this, room)
+  val radius = 8
   //private var heading = 0
   
   def position = _position

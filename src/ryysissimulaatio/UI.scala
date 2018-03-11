@@ -4,20 +4,24 @@ import java.awt.{Graphics2D,Color,BasicStroke}
 import java.awt.event.ActionListener
 import java.awt.geom._
 import scala.swing._
+import scala.math._
+
+object Vars {
+  val Marginal = 10
+  val WallSize = 16
+  
+  def roomToCanvas(base: Double): Int = Marginal+WallSize+round(base).toInt
+}
 
 class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
-  val Marginal = 15
   val room = new Room(width, height, humans)
-  val canvas = new Canvas(room, Marginal)
+  val canvas = new Canvas(room)
   
   title = "the Ryysissimulaatio"
-  preferredSize = new Dimension(width+Marginal*2, height+Marginal*2)
+  preferredSize = new Dimension(width+Vars.WallSize*2+Vars.Marginal*2, 
+                                height+Vars.WallSize*2+Vars.Marginal*2)
   resizable = false
   contents = new BoxPanel(Orientation.Vertical) {
-    //contents += new Label("Here is the contents!")
-    /*contents += new Label(width.toString)
-    contents += new Label(height.toString)
-    contents += new Label(humans.toString)*/
     contents += canvas
   }
   
@@ -27,25 +31,37 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
   }
 }
 
-class Canvas(val room: Room, val Marginal: Int) extends Component {
+class Canvas(val room: Room) extends Component {
 
   override def paintComponent(g : Graphics2D) {
-    val d = size
     g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
 		                   java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-    g.setColor(Color.white)
-    g.fillRect(0,0, d.width, d.height)
+    
+    // Draw white background
+		g.setColor(Color.white)
+    g.fillRect(0,0, Vars.Marginal*2+Vars.WallSize*2+room.width, Vars.Marginal*2+Vars.WallSize*2+room.height)
+    
+    // Draw walls, we use fillRect as it gives better control than drawRect+stroke
     g.setColor(Color.black)
-	  g.setStroke(new BasicStroke(10))
-	  g.drawRect(Marginal-5,Marginal-5, d.width-(Marginal-5)*2, d.height-(Marginal-5)*2)
-	  val leftMiddle = d.height/2
+	  g.fillRect(Vars.Marginal, Vars.Marginal, room.width+Vars.WallSize*2, room.height+Vars.WallSize*2)
+	  
+	  // Draw the actual room
 	  g.setColor(Color.white)
-	  g.fillRect(0,leftMiddle-25,20,50)
+	  g.fillRect(Vars.roomToCanvas(0), Vars.roomToCanvas(0), room.width, room.height)
+	  
+	  // Draw door
+	  g.setColor(Color.white)
+	  val doorX = Vars.roomToCanvas(room.door.x)
+	  val doorY = Vars.roomToCanvas(room.door.y)
+	  val DoorWidth = 40
+	  g.fillRect(doorX-Vars.WallSize, doorY-DoorWidth/2, Vars.WallSize, DoorWidth)
+
+	  // Draw humans
 	  for (human <- room.humans) {
-	    val x = human.position.x
-	    val y = human.position.y
+	    val x = Vars.roomToCanvas(human.position.x)
+	    val y = Vars.roomToCanvas(human.position.y)
 	    g.setColor(Color.blue)
-      g.fill(new Ellipse2D.Double(x+Marginal-7, y+Marginal-7, 14, 14))
+      g.fill(new Ellipse2D.Double(x-human.radius, y-human.radius, human.radius*2, human.radius*2))
     }
   }
 }
@@ -69,8 +85,8 @@ object TheRuuhkasimulaatio {
   }
   
   def setup() : (Int, Int, Int) = {
-    var width = "800"
-    var height = "800"
+    var width = "500"
+    var height = "500"
     var humans = "10"
     var r = Dialog.showInput(null, "Room width", initial=width)
     r match {
@@ -87,6 +103,6 @@ object TheRuuhkasimulaatio {
       case Some(s) => humans = s
       case None =>
     }
-    return (width.toInt, height.toInt, humans.toInt)
+    return (max(width.toInt, 100), max(height.toInt, 100), max(humans.toInt,1))
   }
 }
