@@ -9,10 +9,8 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     returnVector += seek().truncate(1.0)
     returnVector += avoid().truncate(2.0)
     returnVector += wander().truncate(1.0)
-    println(separation())
     returnVector += separation().truncate(1.0)
-    println(returnVector)
-    return returnVector.normalize()
+    returnVector
   }
   
   private def seek() : Vector2D = {
@@ -34,7 +32,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
   
   private def separation() : Vector2D = {
     val neighborhood = room.humans.map(other => (human.position - other.position)).filter( _.length < 80 )
-    neighborhood.map( distance => distance*pow(distance.length, 2) ).fold(Vector2D(0, 0)) { _ + _ }
+    neighborhood.map( distance => distance * pow(distance.length, 2) ).fold(Vector2D(0, 0)) { _ + _ }
   }
   
   // maybe not needed with separation

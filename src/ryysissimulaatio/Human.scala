@@ -14,7 +14,7 @@ class Human( x: Double, y: Double, val room: Room) {
   private def getAcceleration() = steering.getAcceleration().truncate(Human.MaxForce)
   
   def move() = {
-    _velocity += getAcceleration()
+    _velocity += getAcceleration().truncate(Human.MaxForce)
     _velocity = velocity.truncate(Human.MaxSpeed)
     _position += velocity
     if(_position.x < 7 && (_position.y < room.door-25 || _position.y > room.door+25)) _position = Vector2D(7, _position.y)
@@ -27,6 +27,6 @@ class Human( x: Double, y: Double, val room: Room) {
 }
 
 object Human {
-  val MaxForce = 1
-  val MaxSpeed = 3
+  val MaxForce: Double = 0.2
+  val MaxSpeed: Double = 1.5
 }
