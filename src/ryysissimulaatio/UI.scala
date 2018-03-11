@@ -49,12 +49,11 @@ class Canvas(val room: Room) extends Component {
 	  g.setColor(Color.white)
 	  g.fillRect(Vars.roomToCanvas(0), Vars.roomToCanvas(0), room.width, room.height)
 	  
-	  // Draw door
+	  // Draw door, currently door is fixed at left side of room in half-way of the wall.
 	  g.setColor(Color.white)
 	  val doorX = Vars.roomToCanvas(room.door.x)
 	  val doorY = Vars.roomToCanvas(room.door.y)
-	  val DoorWidth = 40
-	  g.fillRect(doorX-Vars.WallSize, doorY-DoorWidth/2, Vars.WallSize, DoorWidth)
+	  g.fillRect(doorX-Vars.WallSize, doorY-room.doorWidth/2, Vars.WallSize, room.doorWidth)
 
 	  // Draw humans
 	  for (human <- room.humans) {
