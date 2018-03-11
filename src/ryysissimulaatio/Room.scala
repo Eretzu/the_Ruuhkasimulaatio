@@ -5,7 +5,9 @@ import scala.util.Random
 
 class Room(val width: Int, val height: Int, humanAmount: Int) {
   private val rand = new Random
-  private var _humans = ArrayBuffer.fill[Human](humanAmount)(new Human(rand.nextInt(width), rand.nextInt(height), this))
+  
+  // Default Human.radius is currently 8, but it could be randomized with mass
+  private var _humans = ArrayBuffer.fill[Human](humanAmount)(new Human(10+rand.nextInt(width-20), 10+rand.nextInt(height-20), this, 8))
     
   def runRound() = _humans.foreach( _.move() )
   
