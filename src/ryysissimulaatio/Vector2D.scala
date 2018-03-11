@@ -10,6 +10,8 @@ case class Vector2D(x: Double, y: Double) {
 
   def * (scalar: Double) = Vector2D(x*scalar, y*scalar)
   
+  def / (scalar: Double) = Vector2D(x/scalar, y/scalar)
+  
   def normalize() = this.truncate(1.0)
   
   def truncate(maxLength: Double) = {

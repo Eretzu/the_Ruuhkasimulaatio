@@ -29,7 +29,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     else if(room.width - human.position.y < WallDistance) y = (WallDistance - (room.width - human.position.y.toInt))/WallDistance*2 
     Vector2D(x,y)
   }
-  
+   
   private def separation() : Vector2D = {
     val neighborhood = room.humans.map(other => (human.position - other.position)).filter( _.length < 80 )
     neighborhood.map( distance => distance * pow(distance.length, 2) ).fold(Vector2D(0, 0)) { _ + _ }
