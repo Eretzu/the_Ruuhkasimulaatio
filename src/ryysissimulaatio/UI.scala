@@ -6,14 +6,10 @@ import java.awt.geom._
 import scala.swing._
 import scala.math._
 
-object Helper {
-  val scale = 20
-  val Marginal = (0.3*scale).toInt
-  val WallSize = (0.5*scale).toInt
-  val EdgeSize = Marginal+WallSize
-  
-  // converts meters to pixels
-  def convert(meters: Double): Int = round((meters*scale)).toInt
+object Vars {
+  val Marginal = 10
+  val WallSize = 16
+  val Border = Marginal+WallSize
 }
 
 class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
@@ -21,10 +17,8 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
   val canvas = new Canvas(room)
   
   title = "the Ryysissimulaatio"
-  
-  // Start with one meter being 100 pixels
-  preferredSize = new Dimension(Helper.EdgeSize*2+Helper.convert(width), 
-                                Helper.EdgeSize*2+Helper.convert(height))
+  preferredSize = new Dimension(width+Vars.Border*2, 
+                                height+Vars.Border*2)
   resizable = false
   contents = new BoxPanel(Orientation.Vertical) {
     contents += canvas
@@ -37,34 +31,35 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
 }
 
 class Canvas(val room: Room) extends Component {
-  override def paintComponent(g : Graphics2D) {    
+
+  override def paintComponent(g : Graphics2D) {
     g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
 		                   java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     
     // Draw white background
 		g.setColor(Color.white)
-    g.fillRect(0,0, Helper.EdgeSize*2+Helper.convert(room.width), Helper.EdgeSize*2+Helper.convert(room.height))
+    g.fillRect(0,0, Vars.Border*2+room.width, Vars.Border*2+room.height)
     
     // Draw walls, we use fillRect as it gives better control than drawRect+stroke
     g.setColor(Color.black)
-	  g.fillRect(Helper.Marginal, Helper.Marginal, Helper.convert(room.width)+Helper.WallSize*2, Helper.convert(room.height)+Helper.WallSize*2)
+	  g.fillRect(Vars.Marginal, Vars.Marginal, room.width+Vars.WallSize*2, room.height+Vars.WallSize*2)
 	  
 	  // Draw the actual room
 	  g.setColor(Color.white)
-	  g.fillRect(Helper.EdgeSize, Helper.EdgeSize, Helper.convert(room.width), Helper.convert(room.height))
+	  g.fillRect(Vars.Border, Vars.Border, room.width, room.height)
 	  
 	  // Draw door
 	  g.setColor(Color.white)
-	  val doorX = Helper.EdgeSize+Helper.convert(room.door.x)
-	  val doorY = Helper.EdgeSize+Helper.convert(room.door.y)
-	  g.fillRect(doorX-Helper.WallSize, doorY-Helper.convert(room.doorWidth/2), Helper.WallSize, Helper.convert(room.doorWidth))
+	  val doorX = Vars.Border + room.door.x
+	  val doorY = Vars.Border + room.door.y
+	  g.fillRect(doorX.toInt-Vars.WallSize, doorY.toInt-room.doorWidth/2, Vars.WallSize, room.doorWidth)
 
 	  // Draw humans
 	  for (human <- room.humans) {
-	    val x = Helper.EdgeSize+Helper.convert(human.position.x)
-	    val y = Helper.EdgeSize+Helper.convert(human.position.y)
+	    val x = Vars.Border + human.position.x
+	    val y = Vars.Border + human.position.y
 	    g.setColor(Color.blue)
-      g.fill(new Ellipse2D.Double(x-Helper.convert(Human.Radius), y-Helper.convert(Human.Radius), Helper.convert(Human.Radius)*2, Helper.convert(Human.Radius)*2))
+      g.fill(new Ellipse2D.Double(x-human.radius, y-human.radius, human.radius*2, human.radius*2))
     }
   }
 }
@@ -88,15 +83,15 @@ object TheRuuhkasimulaatio {
   }
   
   def setup() : (Int, Int, Int) = {
-    var width = "50"
-    var height = "50"
+    var width = "500"
+    var height = "500"
     var humans = "10"
-    var r = Dialog.showInput(null, "Room width in meters", initial=width)
+    var r = Dialog.showInput(null, "Room width", initial=width)
     r match {
       case Some(s) => width = s
       case None =>
     }
-    r = Dialog.showInput(null, "Room height in meters", initial=height)
+    r = Dialog.showInput(null, "Room height", initial=height)
     r match {
       case Some(s) => height = s
       case None =>
@@ -106,6 +101,6 @@ object TheRuuhkasimulaatio {
       case Some(s) => humans = s
       case None =>
     }
-    return (max(width.toInt, 10), max(height.toInt, 10), max(humans.toInt, 1))
+    return (max(width.toInt, 100), max(height.toInt, 100), max(humans.toInt,1))
   }
 }

@@ -16,14 +16,14 @@ case class Vector2D(x: Double, y: Double) {
   
   def normalize() = Vector2D(x/length, y/length)
   
-  def * (other: Vector2D): Double = this.x*other.x + this.y*other.y 
-  
-  def angle(other: Vector2D): Double = math.acos(this*other/(this.length*other.length))
-  
   def truncate(maxLength: Double) = {
     if(this.length > maxLength) Vector2D(x/length*maxLength, y/length*maxLength)
     else this
   }
+  
+  def dot (other: Vector2D): Double = this.x*other.x + this.y*other.y
+  
+  def angle (other: Vector2D): Double = math.acos(this dot other/(this.length*other.length))
   
   /**
    * Lakee yhteen kaksi vektoria ja palauttaa uuden vektorin
