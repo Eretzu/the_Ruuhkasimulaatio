@@ -9,8 +9,7 @@ import scala.math._
 object Vars {
   val Marginal = 10
   val WallSize = 16
-  
-  def roomToCanvas(base: Double): Int = Marginal+WallSize+round(base).toInt
+  val Border = Marginal+WallSize
 }
 
 class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
@@ -18,8 +17,8 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
   val canvas = new Canvas(room)
   
   title = "the Ryysissimulaatio"
-  preferredSize = new Dimension(width+Vars.WallSize*2+Vars.Marginal*2, 
-                                height+Vars.WallSize*2+Vars.Marginal*2)
+  preferredSize = new Dimension(width+Vars.Border*2, 
+                                height+Vars.Border*2)
   resizable = false
   contents = new BoxPanel(Orientation.Vertical) {
     contents += canvas
@@ -39,7 +38,7 @@ class Canvas(val room: Room) extends Component {
     
     // Draw white background
 		g.setColor(Color.white)
-    g.fillRect(0,0, Vars.Marginal*2+Vars.WallSize*2+room.width, Vars.Marginal*2+Vars.WallSize*2+room.height)
+    g.fillRect(0,0, Vars.Border*2+room.width, Vars.Border*2+room.height)
     
     // Draw walls, we use fillRect as it gives better control than drawRect+stroke
     g.setColor(Color.black)
@@ -47,18 +46,18 @@ class Canvas(val room: Room) extends Component {
 	  
 	  // Draw the actual room
 	  g.setColor(Color.white)
-	  g.fillRect(Vars.roomToCanvas(0), Vars.roomToCanvas(0), room.width, room.height)
+	  g.fillRect(Vars.Border, Vars.Border, room.width, room.height)
 	  
 	  // Draw door
 	  g.setColor(Color.white)
-	  val doorX = Vars.roomToCanvas(room.door.x)
-	  val doorY = Vars.roomToCanvas(room.door.y)
-	  g.fillRect(doorX-Vars.WallSize, doorY-room.doorWidth/2, Vars.WallSize, room.doorWidth)
+	  val doorX = Vars.Border + room.door.x
+	  val doorY = Vars.Border + room.door.y
+	  g.fillRect(doorX.toInt-Vars.WallSize, doorY.toInt-room.doorWidth/2, Vars.WallSize, room.doorWidth)
 
 	  // Draw humans
 	  for (human <- room.humans) {
-	    val x = Vars.roomToCanvas(human.position.x)
-	    val y = Vars.roomToCanvas(human.position.y)
+	    val x = Vars.Border + human.position.x
+	    val y = Vars.Border + human.position.y
 	    g.setColor(Color.blue)
       g.fill(new Ellipse2D.Double(x-human.radius, y-human.radius, human.radius*2, human.radius*2))
     }
