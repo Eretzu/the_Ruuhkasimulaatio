@@ -20,19 +20,10 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
     // Truncate velocity to MaxSpeed
     _velocity = velocity.truncate(Human.MaxSpeed)
     _position += velocity
-    
-    /*
-    if(_position.x < 7 && (_position.y < room.door-25 || _position.y > room.door+25)) _position = Vector2D(7, _position.y)
-    else if(room.width - _position.x < 7) _position = Vector2D(room.width-7, _position.y)
-    if(_position.y < 7) _position = Vector2D(_position.x, 7)
-    else if(room.height - _position.y < 7) _position = Vector2D(_position.x, room.height-7)
-    */
-    
-    //if(_position.x < -5) room.delete(this)
   }
 }
 
 object Human {
-  val MaxForce: Double = 0.2
-  val MaxSpeed: Double = 1.5
+  val MaxSpeed: Double = 1
+  val MaxForce: Double = 0.1
 }

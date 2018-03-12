@@ -76,7 +76,7 @@ object TheRuuhkasimulaatio {
       }  
     }
     
-    val timer = new javax.swing.Timer(6, listener)
+    val timer = new javax.swing.Timer(17, listener)
     timer.start()
 
     println("End of main function")
