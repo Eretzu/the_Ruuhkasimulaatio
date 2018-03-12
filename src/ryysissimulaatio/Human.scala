@@ -1,11 +1,10 @@
 package ryysissimulaatio
 
-class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass: Double = 1) {
-  require(radius >= 2)
+class Human( x: Double, y: Double, val room: Room, val mass: Double = 1) {
   require(mass > 0)
   
   private var _position = Vector2D(x, y)
-  private var _velocity = Vector2D(0,0)
+  private var _velocity = Vector2D(0, 0)
   private val steering = new SteeringAlgorithm(this, room)
   //private var heading = 0
   
@@ -33,6 +32,10 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
 }
 
 object Human {
-  val MaxForce: Double = 0.2
-  val MaxSpeed: Double = 1.5
+  // Based on personal observations humans accelerate from 0 to full speed in around one second.
+  val MaxForce: Double = MaxSpeed/60
+  // According to wikipedia average human speed is something like 1.4 m/s
+  val MaxSpeed: Double = 1.4
+  // Human takes about a quarter of square meter of space so his radius is around half that.
+  val Radius: Double = 0.25
 }

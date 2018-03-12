@@ -1,6 +1,9 @@
-Tämä applikaatio on yksi kouluprojektini. Tarkoitus on simuloida ihmisten poistumista huoneesta. 
-Säännöt simulaatiossa ovat melko yksinkertaiset: ihmiset pyrkivät kävelemään ovelle samalla, kun he pyrkivät pysymään erossa seinistä ja muista ihmisistä.
+This simulator is one of my school projects. It's meant to simulate humans leaving room while avoiding crashing into each other.
 
-Koordinaattisuunnat ovat oikealle ja alaspäin.
+Coordinate-direction are right and down.
+1 meter ≃ 1 unit
+Simulation speed should is about 60 tick in a second. 
+Mass-unit is not specified.
+Angles use radians.
 
-Tekijä: Mikko Hemilä
+Mikko Hemilä

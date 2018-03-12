@@ -12,7 +12,13 @@ case class Vector2D(x: Double, y: Double) {
   
   def / (scalar: Double) = Vector2D(x/scalar, y/scalar)
   
-  def normalize() = this.truncate(1.0)
+  def unary_- = Vector2D(-x, -y)
+  
+  def normalize() = Vector2D(x/length, y/length)
+  
+  def * (other: Vector2D): Double = this.x*other.x + this.y*other.y 
+  
+  def angle(other: Vector2D): Double = math.acos(this*other/(this.length*other.length))
   
   def truncate(maxLength: Double) = {
     if(this.length > maxLength) Vector2D(x/length*maxLength, y/length*maxLength)
