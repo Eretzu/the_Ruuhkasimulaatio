@@ -1,8 +1,12 @@
-This simulator is one of my school projects. It's meant to simulate humans leaving room while avoiding crashing into each other.
+This simulator is one of my school projects. 
+It's meant to simulate humans leaving room while avoiding crashing into each other.
+
+It can be run through eclipse, but it does need scala and scala.swing libraries.
+The program can be started with UI.scala file. 
 
 Coordinate-direction are right and down.
-1 meter ≃ 1 unit
-Simulation speed should is about 60 tick in a second. 
+Distance-unit is not specified
+Simulation speed is about 60 tick in a second. 
 Mass-unit is not specified.
 Angles use radians.
 
