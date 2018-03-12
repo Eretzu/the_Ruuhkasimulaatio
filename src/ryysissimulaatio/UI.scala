@@ -6,11 +6,14 @@ import java.awt.geom._
 import scala.swing._
 import scala.math._
 
-object Vars {
-  val Marginal = 10
-  val WallSize = 16
+object Helper {
+  val scale = 20
+  val Marginal = (0.3*scale).toInt
+  val WallSize = (0.5*scale).toInt
+  val EdgeSize = Marginal+WallSize
   
-  def roomToCanvas(base: Double): Int = Marginal+WallSize+round(base).toInt
+  // converts meters to pixels
+  def convert(meters: Double): Int = round((meters*scale)).toInt
 }
 
 class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
@@ -18,8 +21,10 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
   val canvas = new Canvas(room)
   
   title = "the Ryysissimulaatio"
-  preferredSize = new Dimension(width+Vars.WallSize*2+Vars.Marginal*2, 
-                                height+Vars.WallSize*2+Vars.Marginal*2)
+  
+  // Start with one meter being 100 pixels
+  preferredSize = new Dimension(Helper.EdgeSize*2+Helper.convert(width), 
+                                Helper.EdgeSize*2+Helper.convert(height))
   resizable = false
   contents = new BoxPanel(Orientation.Vertical) {
     contents += canvas
@@ -32,35 +37,34 @@ class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
 }
 
 class Canvas(val room: Room) extends Component {
-
-  override def paintComponent(g : Graphics2D) {
+  override def paintComponent(g : Graphics2D) {    
     g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
 		                   java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     
     // Draw white background
 		g.setColor(Color.white)
-    g.fillRect(0,0, Vars.Marginal*2+Vars.WallSize*2+room.width, Vars.Marginal*2+Vars.WallSize*2+room.height)
+    g.fillRect(0,0, Helper.EdgeSize*2+Helper.convert(room.width), Helper.EdgeSize*2+Helper.convert(room.height))
     
     // Draw walls, we use fillRect as it gives better control than drawRect+stroke
     g.setColor(Color.black)
-	  g.fillRect(Vars.Marginal, Vars.Marginal, room.width+Vars.WallSize*2, room.height+Vars.WallSize*2)
+	  g.fillRect(Helper.Marginal, Helper.Marginal, Helper.convert(room.width)+Helper.WallSize*2, Helper.convert(room.height)+Helper.WallSize*2)
 	  
 	  // Draw the actual room
 	  g.setColor(Color.white)
-	  g.fillRect(Vars.roomToCanvas(0), Vars.roomToCanvas(0), room.width, room.height)
+	  g.fillRect(Helper.EdgeSize, Helper.EdgeSize, Helper.convert(room.width), Helper.convert(room.height))
 	  
 	  // Draw door
 	  g.setColor(Color.white)
-	  val doorX = Vars.roomToCanvas(room.door.x)
-	  val doorY = Vars.roomToCanvas(room.door.y)
-	  g.fillRect(doorX-Vars.WallSize, doorY-room.doorWidth/2, Vars.WallSize, room.doorWidth)
+	  val doorX = Helper.EdgeSize+Helper.convert(room.door.x)
+	  val doorY = Helper.EdgeSize+Helper.convert(room.door.y)
+	  g.fillRect(doorX-Helper.WallSize, doorY-Helper.convert(room.doorWidth/2), Helper.WallSize, Helper.convert(room.doorWidth))
 
 	  // Draw humans
 	  for (human <- room.humans) {
-	    val x = Vars.roomToCanvas(human.position.x)
-	    val y = Vars.roomToCanvas(human.position.y)
+	    val x = Helper.EdgeSize+Helper.convert(human.position.x)
+	    val y = Helper.EdgeSize+Helper.convert(human.position.y)
 	    g.setColor(Color.blue)
-      g.fill(new Ellipse2D.Double(x-human.radius, y-human.radius, human.radius*2, human.radius*2))
+      g.fill(new Ellipse2D.Double(x-Helper.convert(Human.Radius), y-Helper.convert(Human.Radius), Helper.convert(Human.Radius)*2, Helper.convert(Human.Radius)*2))
     }
   }
 }
@@ -77,22 +81,22 @@ object TheRuuhkasimulaatio {
       }  
     }
     
-    val timer = new javax.swing.Timer(6, listener)
+    val timer = new javax.swing.Timer(17, listener)
     timer.start()
 
     println("End of main function")
   }
   
   def setup() : (Int, Int, Int) = {
-    var width = "500"
-    var height = "500"
+    var width = "50"
+    var height = "50"
     var humans = "10"
-    var r = Dialog.showInput(null, "Room width", initial=width)
+    var r = Dialog.showInput(null, "Room width in meters", initial=width)
     r match {
       case Some(s) => width = s
       case None =>
     }
-    r = Dialog.showInput(null, "Room height", initial=height)
+    r = Dialog.showInput(null, "Room height in meters", initial=height)
     r match {
       case Some(s) => height = s
       case None =>
@@ -102,6 +106,6 @@ object TheRuuhkasimulaatio {
       case Some(s) => humans = s
       case None =>
     }
-    return (max(width.toInt, 100), max(height.toInt, 100), max(humans.toInt,1))
+    return (max(width.toInt, 10), max(height.toInt, 10), max(humans.toInt, 1))
   }
 }

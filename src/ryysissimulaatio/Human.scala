@@ -32,10 +32,10 @@ class Human( x: Double, y: Double, val room: Room, val mass: Double = 1) {
 }
 
 object Human {
+  // According to wikipedia average human speed is something like 1.4 m/s
+  val MaxSpeed: Double = 1.4/60
   // Based on personal observations humans accelerate from 0 to full speed in around one second.
   val MaxForce: Double = MaxSpeed/60
-  // According to wikipedia average human speed is something like 1.4 m/s
-  val MaxSpeed: Double = 1.4
   // Human takes about a quarter of square meter of space so his radius is around half that.
   val Radius: Double = 0.25
 }
