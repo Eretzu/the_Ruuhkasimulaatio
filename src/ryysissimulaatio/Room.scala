@@ -15,7 +15,7 @@ class Room(val width: Int, val height: Int, humanAmount: Int) {
   
   // Door coordinates and width
   val door = Vector2D(0, height.toDouble/2)
-  val doorWidth: Double = 40
+  val doorWidth = 40
     
   def humans = _humans.toVector
 }
