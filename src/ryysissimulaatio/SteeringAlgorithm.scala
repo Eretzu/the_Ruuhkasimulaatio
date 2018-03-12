@@ -7,9 +7,9 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
   def getAcceleration () : Vector2D = {
     var returnVector = new Vector2D(0, 0)
     returnVector += seek()*1
-    //returnVector += avoid()*1
+    returnVector += avoidWalls()*4.5
     //returnVector += wander()*1
-    returnVector += separation()*3
+    returnVector += separation()*5
     returnVector
   }
   
@@ -20,8 +20,21 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     desiredVelocity - human.velocity
   }
   
-  private def avoid() : Vector2D = {
-    var x, y = 0
+  private def avoidWalls() : Vector2D = {
+    val posX = human.position.x
+    val posY = human.position.y
+    if(posX < 0 || (room.door - human.position).length < room.doorWidth/2) return Vector2D(0, 0)
+    
+    var x, y = 0.0
+    // Nearest 2 walls create force away from them.
+    val rightX = room.width - posX
+    if(posX < 200) x = posX / math.pow(posX, 2) 
+    else if(rightX < 200) x = -(rightX / math.pow(rightX, 2))
+    
+    val bottomY = room.height - posY
+    if(posY < 200) y = posY / math.pow(posY, 2)
+    else if (bottomY < 200) y = -(bottomY / math.pow(bottomY, 2))
+    
     Vector2D(x,y)
   }
    
