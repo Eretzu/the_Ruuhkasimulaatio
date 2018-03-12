@@ -5,11 +5,11 @@ import scala.math.pow
 
 class SteeringAlgorithm( val human: Human, val room: Room) {
   def getAcceleration () : Vector2D = {
-    var returnVector = new Vector2D(0,0)
+    var returnVector = new Vector2D(0, 0)
     returnVector += seek()*1
     //returnVector += avoid()*1
     //returnVector += wander()*1
-    //returnVector += separation()*100
+    returnVector += separation()*3
     returnVector
   }
   
@@ -25,12 +25,12 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     Vector2D(x,y)
   }
    
-  /*private def separation() : Vector2D = {
-    val back = -human.velocity
-    val visible = room.humans.filter(other => (other.position angle back) > math.Pi/3)
-    val neighborhood = visible.map(other => (human.position - other.position)).filter( x => x.length < 30 && x.length > 0.01 )
+  private def separation() : Vector2D = {
+    // Visibility is 240 degrees so PI*2/3 rad, but it needs to be divided by 2 as the velosity is in the middle
+    val visible = room.humans.filter(other => ((other.position-human.position) angle human.velocity) < ( 2.0*math.Pi/3.0))
+    val neighborhood = visible.map(other => (human.position - other.position)).filter( x => x.length < 100 && x.length > 0.01 )
     neighborhood.map( distance => distance / pow(distance.length, 2) ).fold(Vector2D(0, 0)) { _ + _ }
-  }*/
+  }
   
   private def wander() : Vector2D = {
     val rand = new Random()

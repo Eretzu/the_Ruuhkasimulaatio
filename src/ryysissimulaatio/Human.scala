@@ -25,5 +25,5 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
 
 object Human {
   val MaxSpeed: Double = 1
-  val MaxForce: Double = 0.05
+  val MaxForce: Double = 0.1
 }

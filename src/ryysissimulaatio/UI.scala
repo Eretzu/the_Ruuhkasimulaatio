@@ -85,7 +85,7 @@ object TheRuuhkasimulaatio {
   def setup() : (Int, Int, Int) = {
     var width = "500"
     var height = "500"
-    var humans = "10"
+    var humans = "20"
     var r = Dialog.showInput(null, "Room width", initial=width)
     r match {
       case Some(s) => width = s
