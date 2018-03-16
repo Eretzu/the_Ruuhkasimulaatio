@@ -1,4 +1,4 @@
-This simulator is one of my school projects. 
+This simulator is one of my school projects. And still work in progress. 
 It's meant to simulate humans leaving room while avoiding crashing into each other.
 
 It can be run through eclipse, but it does need scala and scala.swing libraries.

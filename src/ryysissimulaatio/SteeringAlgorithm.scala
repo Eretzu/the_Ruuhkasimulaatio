@@ -6,16 +6,27 @@ import scala.math.pow
 class SteeringAlgorithm( val human: Human, val room: Room) {
   def getAcceleration () : Vector2D = {
     var returnVector = new Vector2D(0, 0)
-    returnVector += seek()*1
-    returnVector += avoidWalls()*4.5
+    if((room.door - human.position).length <= room.doorWidth/2) {
+      returnVector += passThrough()*0.05
+      returnVector += Vector2D(-1, 0)
+    } else if (human.position.x < 0) {
+      returnVector += Vector2D(-1, 0)
+    } else {
+      returnVector += seek()*1
+      returnVector += avoidWalls()*4.5
+    }
     //returnVector += wander()*1
     returnVector += separation()*5
     returnVector
   }
   
+  private def passThrough() : Vector2D = {
+    Vector2D(0, room.door.y - human.position.y)
+  }
+  
   private def seek() : Vector2D = {
     val desiredPosition = room.door - human.position
-    if(human.position.x < 0 || desiredPosition.length < room.doorWidth/2) return Vector2D(-1, 0)
+    //if(human.position.x < 0 || desiredPosition.length < room.doorWidth/2) return Vector2D(-1, 0)
     val desiredVelocity = desiredPosition.truncate(Human.MaxSpeed)
     desiredVelocity - human.velocity
   }
@@ -23,7 +34,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
   private def avoidWalls() : Vector2D = {
     val posX = human.position.x
     val posY = human.position.y
-    if(posX < 0 || (room.door - human.position).length < room.doorWidth/2) return Vector2D(0, 0)
+    //if(posX < 0 || (room.door - human.position).length < room.doorWidth/2) return Vector2D(0, 0)
     
     var x, y = 0.0
     // Nearest 2 walls create force away from them.
@@ -45,6 +56,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     neighborhood.map( distance => distance / pow(distance.length, 2) ).fold(Vector2D(0, 0)) { _ + _ }
   }
   
+  // To be updated to a more nuanced variation.
   private def wander() : Vector2D = {
     val rand = new Random()
     Vector2D(rand.nextDouble()-rand.nextDouble(), rand.nextDouble()-rand.nextDouble()).normalize
