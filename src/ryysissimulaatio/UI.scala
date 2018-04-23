@@ -60,9 +60,25 @@ class Canvas(val room: Room) extends Component {
 	    val y = Vars.Border + human.position.y
 	    g.setStroke(new BasicStroke())
 	    g.setColor(Color.black)
-	    g.draw(new Line2D.Double(x+human.direction.x*8, y+human.direction.y*8, x+human.velocity.x*20, y+human.velocity.y*20))
+	    g.draw(new Line2D.Double(x+human.direction.x*human.radius, y+human.direction.y*human.radius, x+human.velocity.x*20, y+human.velocity.y*20))
 	    g.setColor(Color.blue)
       g.fill(new Ellipse2D.Double(x-human.radius, y-human.radius, human.radius*2, human.radius*2))
+    }
+  }
+}
+
+class OptionsPanel extends Frame {
+  
+  preferredSize = new Dimension(100, 100)
+  
+  contents = new BoxPanel(Orientation.Horizontal) {
+    contents += new BoxPanel(Orientation.Vertical) {
+      contents += new Label("MaxSpeed:")
+      contents += new Label("MaxAcceleration:")
+      contents += new Label("MassMultiplier:")
+    }
+    contents += new BoxPanel(Orientation.Vertical) {
+      
     }
   }
 }
@@ -70,8 +86,12 @@ class Canvas(val room: Room) extends Component {
 object TheRuuhkasimulaatio {
   def main(args: Array[String]) {
     val vals = setup()
+    
     val ui = new UI(vals._1, vals._2, vals._3)
     ui.visible = true
+      
+    val options = new OptionsPanel
+    options.visible = true
     
     val listener = new ActionListener(){
       def actionPerformed(e : java.awt.event.ActionEvent) = {
