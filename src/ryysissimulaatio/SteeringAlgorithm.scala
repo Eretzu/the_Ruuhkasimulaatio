@@ -13,7 +13,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
       returnVector += Vector2D(-1, 0)
     } else {
       returnVector += seek()*1
-      returnVector += avoidWalls()*4.5
+      returnVector += avoidWalls()*5
     }
     //returnVector += wander()*1
     returnVector += separation()*5

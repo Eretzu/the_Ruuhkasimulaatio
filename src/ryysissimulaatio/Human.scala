@@ -6,13 +6,19 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
   
   private var _position = Vector2D(x, y)
   private var _velocity = Vector2D(0,0)
+  private var _acceleration = Vector2D(0,0)
   private val steering = new SteeringAlgorithm(this, room)
   //private var heading = 0
   
   def position = _position
   def velocity = _velocity
+  def acceleration = _acceleration
+  def direction = _velocity.normalize()
   
-  private def getAcceleration(): Vector2D = steering.getAcceleration().truncate(Human.MaxForce)/mass
+  private def getAcceleration(): Vector2D = {
+    _acceleration = steering.getAcceleration().truncate(Human.MaxForce)/mass
+    _acceleration
+  }
   
   def move() = {
     // Get acceleration limited by MaxForce
