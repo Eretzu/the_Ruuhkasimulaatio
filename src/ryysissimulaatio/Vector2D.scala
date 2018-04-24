@@ -10,16 +10,19 @@ case class Vector2D(x: Double, y: Double) {
 
   def * (scalar: Double) = Vector2D(x*scalar, y*scalar)
   
-  def / (scalar: Double) = Vector2D(x/scalar, y/scalar)
+  def / (scalar: Double) = {
+    if(scalar == 0) Vector2D(x,y)
+    else Vector2D(x/scalar, y/scalar)
+  }
   
   def unary_- = Vector2D(-x, -y)
   
   // Returns a unit vector of given vector
-  def normalize() = Vector2D(x/length, y/length)
+  def normalize() = Vector2D(x, y)/length
   
   // Truncates vector to given value
   def truncate(maxLength: Double) = {
-    if(this.length > maxLength) Vector2D(x/length*maxLength, y/length*maxLength)
+    if(this.length > maxLength) Vector2D(x, y).normalize*maxLength
     else this
   }
   

@@ -4,7 +4,9 @@ import scala.util.Random
 import scala.math.pow
 
 class SteeringAlgorithm( val human: Human, val room: Room) {
-  def getAcceleration () : Vector2D = {
+  private var _wanderDirection = Vector2D(0, 0)
+
+  def getAcceleration () : Vector2D = synchronized {
     var returnVector = new Vector2D(0, 0)
     if((room.door - human.position).length <= room.doorWidth/2) {
       returnVector += passThrough()*0.05
@@ -15,9 +17,11 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
       returnVector += seek()*1
       returnVector += avoidWalls()*5
     }
-    //returnVector += wander()*1
-    returnVector += separation()*5
-    returnVector
+    val wanderVal = wander()*0.1
+    val separationVal = separation()*5
+    val ret = returnVector + wanderVal + separationVal
+    //println(returnVector.length + " " + wanderVal.length + " " + separationVal.length)
+    ret
   }
   
   private def passThrough() : Vector2D = {
@@ -52,13 +56,21 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
   private def separation() : Vector2D = {
     // Visibility is 240 degrees so PI*2/3 rad, but it needs to be divided by 2 as the velosity is in the middle
     val visible = room.humans.filter(other => ((other.position-human.position) angle human.velocity) < ( 2.0*math.Pi/3.0))
-    val neighborhood = visible.map(other => (human.position - other.position)).filter( x => x.length < 100 && x.length > 0.01 )
+    val neighborhood = visible.map(other => (human.position - other.position)).filter( x => x.length < 30 && x.length > 0.01 )
     neighborhood.map( distance => distance / pow(distance.length, 2) ).fold(Vector2D(0, 0)) { _ + _ }
   }
   
-  // To be updated to a more nuanced variation.
+  // A wandering method where wandering vector is constrained to a circle with chosen radius.
+  // Circle is supposed to be a little ahead of character
   private def wander() : Vector2D = {
+    val radius = 5
+    val rate = 0.3
+    val center = human.heading*radius
     val rand = new Random()
-    Vector2D(rand.nextDouble()-rand.nextDouble(), rand.nextDouble()-rand.nextDouble()).normalize
+        
+    val addedVector = new Vector2D(rand.nextDouble()-rand.nextDouble(), rand.nextDouble()-rand.nextDouble())*rate
+    _wanderDirection += addedVector
+    _wanderDirection = center + (_wanderDirection-center).normalize*radius
+    _wanderDirection
   }
 }
