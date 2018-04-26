@@ -9,6 +9,8 @@ class Room(val width: Int, val height: Int, humanAmount: Int) {
   private val rand = new Random
   
   private var _humans = ArrayBuffer.fill[Human](humanAmount)(new Human(10+rand.nextInt(width-20), 10+rand.nextInt(height-20), this))
+  
+  // Variables for checkBoxes
   private var _seek = true
   private var _wander = true
   private var _wallAvoidance = true
@@ -23,7 +25,7 @@ class Room(val width: Int, val height: Int, humanAmount: Int) {
   def toggleWander() = _wander = !_wander
   def toggleWallAvoidance() = _wallAvoidance = !_wallAvoidance
   def toggleSeparation() = _separation = !_separation
-    
+  
   def runRound() = _humans.foreach( _.move() )
   
   // Door coordinates and width

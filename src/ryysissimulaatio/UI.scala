@@ -30,8 +30,8 @@ class UI(room: Room) extends Frame {
   }
 }
 
+// Canvas where room and people are drawn and repainted every tick.
 class Canvas(val room: Room) extends Component {
-
   override def paintComponent(g : Graphics2D) {
     g.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, 
 		                   java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
@@ -40,7 +40,7 @@ class Canvas(val room: Room) extends Component {
 		g.setColor(Color.white)
     g.fillRect(0,0, Vars.Border*2+room.width, Vars.Border*2+room.height)
     
-    // Draw walls, we use fillRect as it gives better control than drawRect+stroke
+    // Draw walls, we use fillRect as it gives better control than drawRect
     g.setColor(Color.black)
 	  g.fillRect(Vars.Marginal, Vars.Marginal, room.width+Vars.WallSize*2, room.height+Vars.WallSize*2)
 	  
@@ -68,6 +68,7 @@ class Canvas(val room: Room) extends Component {
   }
 }
 
+// MainFrame, program closes when this is closed
 class OptionsPanel(vals: (Int, Int, Int)) extends MainFrame {
   private var room = new Room( vals._1, vals._2, vals._3)
   private var ui = new UI(room)
@@ -79,9 +80,7 @@ class OptionsPanel(vals: (Int, Int, Int)) extends MainFrame {
     }  
   }
   
-  val timer = new javax.swing.Timer(17, listener)
-  //timer.start()
-  
+  val timer = new javax.swing.Timer(17, listener) // Timer is started with "Start" -button  
   
   val speedSlider = new Slider {
     min = 50
@@ -104,35 +103,27 @@ class OptionsPanel(vals: (Int, Int, Int)) extends MainFrame {
     labels = Map((50, new Label("50%")), (100, new Label("100%")), (150, new Label("Mass")), (200, new Label("200%")))
     paintLabels = true
   }
+  
   val wanderBox = new CheckBox("Wandering") { selected = true }
   val seekBox = new CheckBox("Seeking") { selected = true }
   val wallAvoidanceBox = new CheckBox("Wall Avoidance") { selected = true }
   val separationBox = new CheckBox("Separation") { selected = true }
-  val timerButton = new Button("Start")
+  
+  val timerButton = new Button("Start") 
   val restartButton = new Button("Restart")
   val exitButton = new Button("Quit")
   
-  contents = new BoxPanel(Orientation.Horizontal) {
-    /*contents += new BoxPanel(Orientation.Vertical) {
-      contents += new Label("Speed Multiplier:")
-      contents += new Label("Acceleration Multiplier:")
-      contents += new Label("Mass Multiplier:")
-      contents += new Label("Wander:")
-      contents += new Label("Seek:")
-      contents += new Label("Wall Avoidance:")
-    }*/
-    contents += new BoxPanel(Orientation.Vertical) {
-      contents += speedSlider
-      contents += accelerationSlider
-      contents += massSlider
-      contents += wanderBox
-      contents += seekBox
-      contents += wallAvoidanceBox
-      contents += separationBox
-      contents += timerButton
-      contents += restartButton
-      contents += exitButton
-    }
+  contents = new BoxPanel(Orientation.Vertical) {
+    contents += speedSlider
+    contents += accelerationSlider
+    contents += massSlider
+    contents += wanderBox
+    contents += seekBox
+    contents += wallAvoidanceBox
+    contents += separationBox
+    contents += timerButton
+    contents += restartButton
+    contents += exitButton
   }
   
   listenTo(speedSlider, accelerationSlider, massSlider)
@@ -185,6 +176,7 @@ class OptionsPanel(vals: (Int, Int, Int)) extends MainFrame {
     seekBox.selected = true
     wallAvoidanceBox.selected = true
     separationBox.selected = true
+    timerButton.text = "Start"
     room = new Room( vals._1, vals._2, vals._3)
     ui = new UI(room)
     ui.visible = true
@@ -192,6 +184,7 @@ class OptionsPanel(vals: (Int, Int, Int)) extends MainFrame {
   }
 }
 
+// Object that contains main and allows us to start the program. Setup gives us values for room width, height and population.
 object TheRuuhkasimulaatio {  
   def main(args: Array[String]) {
     val vals = setup()

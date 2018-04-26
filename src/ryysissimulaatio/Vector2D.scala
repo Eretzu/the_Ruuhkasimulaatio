@@ -1,8 +1,6 @@
 package ryysissimulaatio
 
-/**
- * Kuvaa kaksiulotteista matemaattista vektoria
- */
+// Vector2D from asteroid project but heavily modified
 case class Vector2D(x: Double, y: Double) {
 
   val length = math.hypot(x, y)
@@ -20,7 +18,7 @@ case class Vector2D(x: Double, y: Double) {
   // Returns a unit vector of given vector
   def normalize() = Vector2D(x, y)/length
   
-  // Truncates vector to given value
+  // Truncates vector length to given value
   def truncate(maxLength: Double) = {
     if(this.length > maxLength) Vector2D(x, y).normalize*maxLength
     else this

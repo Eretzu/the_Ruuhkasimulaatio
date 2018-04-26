@@ -15,18 +15,21 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
   def acceleration = _acceleration
   def heading = _velocity.normalize()
   
+  // Uses the steering algorithm to get acceleration.
   private def getAcceleration(): Vector2D = {
     _acceleration = steering.getAcceleration().truncate(Human.MaxForce*Human.accelerationMultiplier)/(mass*Human.massMultiplier)
     _acceleration
   }
   
+  // Acceleration -> velocity -> position
   def move() = {
-    // Get acceleration limited by MaxForce
-    _velocity += getAcceleration().truncate(Human.MaxForce)
-    // Truncate velocity to MaxSpeed
-    _velocity = velocity.truncate(Human.MaxSpeed*Human.speedMultiplier)
-    val oldPosition = _position
+    _velocity += getAcceleration().truncate(Human.MaxForce) // Get acceleration limited by MaxForce
+    _velocity = velocity.truncate(Human.MaxSpeed*Human.speedMultiplier) // Truncate velocity to MaxSpeed
+    
+    val oldPosition = _position // for collision detection
     _position += velocity
+    
+    // Collision detection with walls
     if(oldPosition.x < 0 || !((room.door - _position).length <= room.doorWidth/2)) {
       if(oldPosition.x > 0 && _position.x < 0) _position = Vector2D(oldPosition.x, _position.y)
       else if(oldPosition.x < room.width && _position.x > room.width) _position = Vector2D(oldPosition.x, _position.y)

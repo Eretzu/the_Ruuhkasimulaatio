@@ -6,6 +6,7 @@ import scala.math.pow
 class SteeringAlgorithm( val human: Human, val room: Room) {
   private var _wanderDirection = Vector2D(0, 0)
 
+  // Steering algorithm sums different parts together and returns the resulting vector.
   def getAcceleration () : Vector2D = {
     var returnVector = new Vector2D(0, 0)
     if((room.door - human.position).length <= room.doorWidth/2) {
@@ -22,10 +23,12 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     returnVector
   }
   
+  // Passing through the door
   private def passThrough() : Vector2D = {
     Vector2D(0, room.door.y - human.position.y)
   }
   
+  // Seeking the door
   private def seek() : Vector2D = {
     val desiredPosition = room.door - human.position
     //if(human.position.x < 0 || desiredPosition.length < room.doorWidth/2) return Vector2D(-1, 0)
@@ -33,6 +36,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     desiredVelocity - human.velocity
   }
   
+  // Avoid walls
   private def avoidWalls() : Vector2D = {
     val posX = human.position.x
     val posY = human.position.y
@@ -51,6 +55,7 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     Vector2D(x,y)
   }
    
+  // Avoid other people
   private def separation() : Vector2D = {
     // Visibility is 240 degrees so PI*2/3 rad, but it needs to be divided by 2 as the velosity is in the middle
     val visible = room.humans.filter(other => ((other.position-human.position) angle human.velocity) < ( 2.0*math.Pi/3.0))
@@ -59,7 +64,6 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
   }
   
   // A wandering method where wandering vector is constrained to a circle with chosen radius.
-  // Circle is supposed to be a little ahead of character
   private def wander() : Vector2D = {
     val radius = 5
     val rate = 0.3
