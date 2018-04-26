@@ -74,17 +74,22 @@ class OptionsPanel(room: Room) extends Frame {
     min = 50
     value = 100
     max = 200
-    labels = Map((50, new Label("50%")), (100, new Label("100%")), (200, new Label("200%")))
+    labels = Map((50, new Label("50%")), (100, new Label("100%")), (150, new Label("Speed")), (200, new Label("200%")))
+    paintLabels = true
   }
   val accelerationSlider = new Slider {
     min = 50
     value = 100
     max = 200
+    labels = Map((50, new Label("50%")), (100, new Label("100%")), (150, new Label("Acceleration")), (200, new Label("200%")))
+    paintLabels = true
   }
   val massSlider = new Slider {
     min = 50
     value = 100
     max = 200
+    labels = Map((50, new Label("50%")), (100, new Label("100%")), (150, new Label("Mass")), (200, new Label("200%")))
+    paintLabels = true
   }
   val wanderBox = new CheckBox("Wandering") { selected = true }
   val seekBox = new CheckBox("Seeking") { selected = true }
@@ -123,6 +128,12 @@ class OptionsPanel(room: Room) extends Frame {
       room.toggleWallAvoidance()
     case ButtonClicked(`separationBox`) => 
       room.toggleSeparation()
+    case ValueChanged(`speedSlider`) => 
+      Human.speedMultiplier = speedSlider.value.toDouble/100
+    case ValueChanged(`accelerationSlider`) => 
+      Human.accelerationMultiplier = accelerationSlider.value.toDouble/100
+    case ValueChanged(`massSlider`) => 
+      Human.massMultiplier = massSlider.value.toDouble/100
   }
   
   this.pack()

@@ -16,7 +16,7 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
   def heading = _velocity.normalize()
   
   private def getAcceleration(): Vector2D = {
-    _acceleration = steering.getAcceleration().truncate(Human.MaxForce)/mass
+    _acceleration = steering.getAcceleration().truncate(Human.MaxForce*Human.accelerationMultiplier)/(mass*Human.massMultiplier)
     _acceleration
   }
   
@@ -24,7 +24,7 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
     // Get acceleration limited by MaxForce
     _velocity += getAcceleration().truncate(Human.MaxForce)
     // Truncate velocity to MaxSpeed
-    _velocity = velocity.truncate(Human.MaxSpeed)
+    _velocity = velocity.truncate(Human.MaxSpeed*Human.speedMultiplier)
     _position += velocity
   }
 }
@@ -32,4 +32,15 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
 object Human {
   val MaxSpeed: Double = 0.7
   val MaxForce: Double = 0.1
+  
+  private var _speedMultiplier = 1.0
+  private var _accelerationMultiplier = 1.0
+  private var _massMultiplier = 1.0
+  
+  def speedMultiplier = _speedMultiplier
+  def speedMultiplier_=(value: Double) = _speedMultiplier = value  
+  def accelerationMultiplier = _accelerationMultiplier
+  def accelerationMultiplier_=(value: Double) = _accelerationMultiplier = value  
+  def massMultiplier = _massMultiplier
+  def massMultiplier_=(value: Double) = _massMultiplier = value
 }
