@@ -25,7 +25,16 @@ class Human( x: Double, y: Double, val room: Room, val radius: Int = 8, val mass
     _velocity += getAcceleration().truncate(Human.MaxForce)
     // Truncate velocity to MaxSpeed
     _velocity = velocity.truncate(Human.MaxSpeed*Human.speedMultiplier)
+    val oldPosition = _position
     _position += velocity
+    if(oldPosition.x < 0 || !((room.door - _position).length <= room.doorWidth/2)) {
+      if(oldPosition.x > 0 && _position.x < 0) _position = Vector2D(oldPosition.x, _position.y)
+      else if(oldPosition.x < room.width && _position.x > room.width) _position = Vector2D(oldPosition.x, _position.y)
+      
+
+      if(oldPosition.y > 0 && _position.y < 0) _position = Vector2D(_position.x, oldPosition.y)
+      else if(oldPosition.y < room.width && _position.y > room.height) _position = Vector2D(_position.x, oldPosition.y)
+    }
   }
 }
 

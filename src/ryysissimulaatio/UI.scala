@@ -13,13 +13,12 @@ object Vars {
   val Border = Marginal+WallSize
 }
 
-class UI( val width: Int, val height: Int, val humans: Int ) extends MainFrame {
-  val room = new Room(width, height, humans)
+class UI(room: Room) extends Frame {
   val canvas = new Canvas(room)
   
   title = "the Ryysissimulaatio"
-  preferredSize = new Dimension(width+Vars.Border*2, 
-                                height+Vars.Border*2)
+  preferredSize = new Dimension(room.width+Vars.Border*2, 
+                                room.height+Vars.Border*2)
   resizable = false
   contents = new BoxPanel(Orientation.Vertical) {
     contents += canvas
@@ -69,7 +68,20 @@ class Canvas(val room: Room) extends Component {
   }
 }
 
-class OptionsPanel(room: Room) extends Frame {
+class OptionsPanel(vals: (Int, Int, Int)) extends MainFrame {
+  private var room = new Room( vals._1, vals._2, vals._3)
+  private var ui = new UI(room)
+  ui.visible = true
+    
+  val listener = new ActionListener(){
+    def actionPerformed(e : java.awt.event.ActionEvent) = {
+      ui.tick()
+    }  
+  }
+  
+  val timer = new javax.swing.Timer(17, listener)
+  //timer.start()
+  
   
   val speedSlider = new Slider {
     min = 50
@@ -96,6 +108,9 @@ class OptionsPanel(room: Room) extends Frame {
   val seekBox = new CheckBox("Seeking") { selected = true }
   val wallAvoidanceBox = new CheckBox("Wall Avoidance") { selected = true }
   val separationBox = new CheckBox("Separation") { selected = true }
+  val timerButton = new Button("Start")
+  val restartButton = new Button("Restart")
+  val exitButton = new Button("Quit")
   
   contents = new BoxPanel(Orientation.Horizontal) {
     /*contents += new BoxPanel(Orientation.Vertical) {
@@ -114,11 +129,15 @@ class OptionsPanel(room: Room) extends Frame {
       contents += seekBox
       contents += wallAvoidanceBox
       contents += separationBox
+      contents += timerButton
+      contents += restartButton
+      contents += exitButton
     }
   }
   
   listenTo(speedSlider, accelerationSlider, massSlider)
   listenTo(wanderBox, seekBox, wallAvoidanceBox, separationBox)
+  listenTo(timerButton, restartButton, exitButton)
   
   reactions += {
     case ButtonClicked(`wanderBox`) => 
@@ -129,6 +148,21 @@ class OptionsPanel(room: Room) extends Frame {
       room.toggleWallAvoidance()
     case ButtonClicked(`separationBox`) => 
       room.toggleSeparation()
+    case ButtonClicked(`timerButton`) => {
+      println(timerButton.text)
+      if(!timer.isRunning()) {
+        timer.start()
+        timerButton.text = "Stop"
+      }
+      else {
+        timer.stop()
+        timerButton.text = "Start"
+      }
+    }
+    case ButtonClicked(`restartButton`) =>
+      restart()
+    case ButtonClicked(`exitButton`) =>
+      System.exit(0)
     case ValueChanged(`speedSlider`) => 
       Human.speedMultiplier = speedSlider.value.toDouble/100
     case ValueChanged(`accelerationSlider`) => 
@@ -140,26 +174,30 @@ class OptionsPanel(room: Room) extends Frame {
   this.pack()
   minimumSize = this.size
   preferredSize = this.size
+  
+  def restart() = {
+    timer.stop()
+    ui.close
+    speedSlider.value = 100
+    accelerationSlider.value = 100
+    massSlider.value = 100
+    wanderBox.selected = true
+    seekBox.selected = true
+    wallAvoidanceBox.selected = true
+    separationBox.selected = true
+    room = new Room( vals._1, vals._2, vals._3)
+    ui = new UI(room)
+    ui.visible = true
+    //timer.start()
+  }
 }
 
-object TheRuuhkasimulaatio {
+object TheRuuhkasimulaatio {  
   def main(args: Array[String]) {
     val vals = setup()
     
-    val ui = new UI(vals._1, vals._2, vals._3)
-    ui.visible = true
-      
-    val options = new OptionsPanel(ui.room)
+    val options = new OptionsPanel(vals)
     options.visible = true
-    
-    val listener = new ActionListener(){
-      def actionPerformed(e : java.awt.event.ActionEvent) = {
-        ui.tick()
-      }  
-    }
-    
-    val timer = new javax.swing.Timer(17, listener)
-    timer.start()
 
     println("End of main function")
   }
