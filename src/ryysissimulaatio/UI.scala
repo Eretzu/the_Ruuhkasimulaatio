@@ -59,9 +59,10 @@ class Canvas(val room: Room) extends Component {
 	  for (human <- room.humans) {
 	    val x = Vars.Border + human.position.x
 	    val y = Vars.Border + human.position.y
+	    val lineLength = 40
 	    g.setStroke(new BasicStroke())
 	    g.setColor(Color.black)
-	    g.draw(new Line2D.Double(x+human.heading.x*human.radius, y+human.heading.y*human.radius, x+human.velocity.x*20, y+human.velocity.y*20))
+	    g.draw(new Line2D.Double(x+human.heading.x*human.radius, y+human.heading.y*human.radius, x+human.velocity.x*lineLength, y+human.velocity.y*lineLength))
 	    g.setColor(Color.blue)
       g.fill(new Ellipse2D.Double(x-human.radius, y-human.radius, human.radius*2, human.radius*2))
     }
