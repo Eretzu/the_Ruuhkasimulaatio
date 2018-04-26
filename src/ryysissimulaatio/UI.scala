@@ -5,6 +5,7 @@ import java.awt.event.ActionListener
 import java.awt.geom._
 import scala.swing._
 import scala.math._
+import event._
 
 object Vars {
   val Marginal = 10
@@ -67,20 +68,66 @@ class Canvas(val room: Room) extends Component {
   }
 }
 
-class OptionsPanel extends Frame {
+class OptionsPanel(room: Room) extends Frame {
   
-  preferredSize = new Dimension(100, 100)
+  val speedSlider = new Slider {
+    min = 50
+    value = 100
+    max = 200
+    labels = Map((50, new Label("50%")), (100, new Label("100%")), (200, new Label("200%")))
+  }
+  val accelerationSlider = new Slider {
+    min = 50
+    value = 100
+    max = 200
+  }
+  val massSlider = new Slider {
+    min = 50
+    value = 100
+    max = 200
+  }
+  val wanderBox = new CheckBox("Wandering") { selected = true }
+  val seekBox = new CheckBox("Seeking") { selected = true }
+  val wallAvoidanceBox = new CheckBox("Wall Avoidance") { selected = true }
+  val separationBox = new CheckBox("Separation") { selected = true }
   
   contents = new BoxPanel(Orientation.Horizontal) {
+    /*contents += new BoxPanel(Orientation.Vertical) {
+      contents += new Label("Speed Multiplier:")
+      contents += new Label("Acceleration Multiplier:")
+      contents += new Label("Mass Multiplier:")
+      contents += new Label("Wander:")
+      contents += new Label("Seek:")
+      contents += new Label("Wall Avoidance:")
+    }*/
     contents += new BoxPanel(Orientation.Vertical) {
-      contents += new Label("MaxSpeed:")
-      contents += new Label("MaxAcceleration:")
-      contents += new Label("MassMultiplier:")
-    }
-    contents += new BoxPanel(Orientation.Vertical) {
-      
+      contents += speedSlider
+      contents += accelerationSlider
+      contents += massSlider
+      contents += wanderBox
+      contents += seekBox
+      contents += wallAvoidanceBox
+      contents += separationBox
     }
   }
+  
+  listenTo(speedSlider, accelerationSlider, massSlider)
+  listenTo(wanderBox, seekBox, wallAvoidanceBox, separationBox)
+  
+  reactions += {
+    case ButtonClicked(`wanderBox`) => 
+      room.toggleWander()
+    case ButtonClicked(`seekBox`) => 
+      room.toggleSeek()
+    case ButtonClicked(`wallAvoidanceBox`) => 
+      room.toggleWallAvoidance()
+    case ButtonClicked(`separationBox`) => 
+      room.toggleSeparation()
+  }
+  
+  this.pack()
+  minimumSize = this.size
+  preferredSize = this.size
 }
 
 object TheRuuhkasimulaatio {
@@ -90,7 +137,7 @@ object TheRuuhkasimulaatio {
     val ui = new UI(vals._1, vals._2, vals._3)
     ui.visible = true
       
-    val options = new OptionsPanel
+    val options = new OptionsPanel(ui.room)
     options.visible = true
     
     val listener = new ActionListener(){

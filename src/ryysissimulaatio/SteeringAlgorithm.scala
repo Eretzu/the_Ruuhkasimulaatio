@@ -6,7 +6,7 @@ import scala.math.pow
 class SteeringAlgorithm( val human: Human, val room: Room) {
   private var _wanderDirection = Vector2D(0, 0)
 
-  def getAcceleration () : Vector2D = synchronized {
+  def getAcceleration () : Vector2D = {
     var returnVector = new Vector2D(0, 0)
     if((room.door - human.position).length <= room.doorWidth/2) {
       returnVector += passThrough()*0.05
@@ -14,14 +14,12 @@ class SteeringAlgorithm( val human: Human, val room: Room) {
     } else if (human.position.x < 0) {
       returnVector += Vector2D(-1, 0)
     } else {
-      returnVector += seek()*1
-      returnVector += avoidWalls()*5
+      if(room.seek) returnVector += seek()*1
+      if(room.avoidWalls) returnVector += avoidWalls()*5
     }
-    val wanderVal = wander()*0.1
-    val separationVal = separation()*5
-    val ret = returnVector + wanderVal + separationVal
-    //println(returnVector.length + " " + wanderVal.length + " " + separationVal.length)
-    ret
+    if(room.wander) returnVector += wander()*0.1
+    if(room.separation) returnVector += separation()*5
+    returnVector
   }
   
   private def passThrough() : Vector2D = {
